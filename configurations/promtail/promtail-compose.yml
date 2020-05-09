@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+
+  promtail:
+    image: grafana/promtail:master
+    container_name: promtail
+    hostname: promtail
+    volumes:
+      - ~/github/esodesod/files/configurations/promtail/promtail-conf.yml:/etc/promtail/docker-config.yaml
+#      - /var/log:/var/log
+    command: -config.file=/etc/promtail/docker-config.yaml
+#    ports:
+#      - "1514:1514"
+#    expose:
+#      - "1514/tcp"
