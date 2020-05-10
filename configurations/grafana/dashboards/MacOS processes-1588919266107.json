@@ -59,7 +59,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1588931707367,
+  "iteration": 1589136091848,
   "links": [],
   "panels": [
     {
@@ -346,7 +346,7 @@
       }
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 22,
   "style": "dark",
   "tags": [],
@@ -354,12 +354,41 @@
     "list": [
       {
         "datasource": "Prometheus",
-        "filters": [],
+        "filters": [
+          {
+            "key": "process",
+            "operator": "=~",
+            "value": "$process"
+          }
+        ],
         "hide": 0,
         "label": "Filters",
         "name": "AdhocFilters",
         "skipUrlSync": false,
         "type": "adhoc"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "label_values(cpu_usage, process)",
+        "hide": 0,
+        "includeAll": true,
+        "index": -1,
+        "label": "",
+        "multi": true,
+        "name": "process",
+        "options": [],
+        "query": "label_values(cpu_usage, process)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
@@ -387,5 +416,5 @@
   "variables": {
     "list": []
   },
-  "version": 20
+  "version": 22
 }
