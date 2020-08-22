@@ -59,7 +59,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1598015528019,
+  "iteration": 1598038342219,
   "links": [],
   "panels": [
     {
@@ -215,6 +215,7 @@
       },
       "hiddenSeries": false,
       "id": 9,
+      "interval": "1s",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -398,6 +399,7 @@
       },
       "hiddenSeries": false,
       "id": 11,
+      "interval": "1s",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -593,7 +595,7 @@
       }
     }
   ],
-  "refresh": "10s",
+  "refresh": "1s",
   "schemaVersion": 26,
   "style": "dark",
   "tags": [],
@@ -660,5 +662,5 @@
   "timezone": "",
   "title": "MacOS CPU troubleshoot",
   "uid": "l4-L6X6Zk",
-  "version": 4
+  "version": 5
 }
