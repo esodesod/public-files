@@ -1,0 +1,59 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki.esod.local:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        __path__: /var/log/**/*log
+  - job_name: docker
+    pipeline_stages:
+      - docker: {}
+      - static_labels:
+          job: dockerlogs
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container_name'
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
+      - source_labels: ['__meta_docker_port_public']
+        target_label: 'container_port_private'
+      - source_labels: ['__meta_docker_port_private']
+        target_label: 'container_port_public'
+  - job_name: journal
+    journal:
+      max_age: 12h
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels: ['__journal__hostname']
+        target_label: 'host'
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'journal_unit'
+      - source_labels: ['__journal_priority']
+        target_label: 'level'
+      - source_labels: ['__journal__transport']
+        target_label: 'journal_transport'
+      - action: drop
+        regex: .+
+        source_labels: ['__journal__audit_id']
+    pipeline_stages:
+    - template:
+        source: level
+        template: '{{ if eq .Value "0" }}{{ Replace .Value "0" "emergency" 1 }}{{ else if eq .Value "1" }}{{ Replace .Value "1" "alert" 1 }}{{ else if eq .Value "2" }}{{ Replace .Value "2" "critical" 1 }}{{ else if eq .Value "3" }}{{ Replace .Value "3" "error" 1 }}{{ else if eq .Value "4" }}{{ Replace .Value "4" "warning" 1 }}{{ else if eq .Value "5" }}{{ Replace .Value "5" "notice" 1 }}{{ else if eq .Value "6" }}{{ Replace .Value "6" "informational" 1 }}{{ else if eq .Value "7" }}{{ Replace .Value "7" "debug" 1 }}{{ end }}'
+    - labels:
+        level:
